@@ -1,0 +1,42 @@
+get_pop_diff <- function(filename){
+  # filename - genalex format file name
+  # a function to calculate pairwise Gst (by Hedrick) and D (Jost)
+  # and make an unrooted NJ tree
+  # both measures are useful to assess population differentiation 
+  # using SSR markers with high mutation rates
+  library(poppr)
+  library(ape)
+  #library(phangorn)
+  library(mmod)
+  
+  # calculate differentiation measures
+  obj <- read.genalex(filename)
+  pw.D <- pairwise_D(obj)
+  pw.G <- pairwise_Gst_Hedrick(obj)
+  
+  pw.D.df <- as.data.frame(as.matrix(pw.D))
+  pw.G.df <- as.data.frame(as.matrix(pw.G))
+  
+  pw.D.df$measure <- rep("Jost's D", nrow(pw.D.df))
+  pw.G.df$measure <- rep("Hedrick's Gst", nrow(pw.G.df))
+  
+  out.df <- rbind(pw.G.df, rep('', ncol(pw.G.df)), pw.D.df)
+  write.table(out.df, 'pop_diff_table.csv', sep = '\t', row.names = T)
+  
+  # make and write trees
+  pw.D.tree <- nj(pw.D)
+  write.tree(pw.D.tree, 'jost_D_tree.nwk')
+  
+  pw.G.tree <- nj(pw.G)
+  write.tree(pw.G.tree, 'hedrick_G_tree.nwk')
+  
+  # write figures
+  png(filename = 'jost_D_tree.png', width = 850, height = 640)
+  plot(pw.D.tree)
+  dev.off()
+  
+  png(filename = 'hedrick_G_tree.png', width = 850, height = 640)
+  plot(pw.G.tree)
+  dev.off()
+  
+}
