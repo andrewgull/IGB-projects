@@ -27,26 +27,29 @@ get_pop_diff <- function(filename){
   write.table(out.df, 'pop_diff_table.csv', sep = '\t', row.names = T)
   
   # make and write trees
-  pw.D.tree <- nj(pw.D)
-  write.tree(pw.D.tree, 'jost_D_tree.nwk')
-  
-  pw.G.tree <- nj(pw.G)
-  write.tree(pw.G.tree, 'hedrick_G_tree.nwk')
-  
-  pw.GN.tree <- nj(pw.GN)
-  write.tree(pw.GN.tree, 'nei_G_tree.nwk')
-  
-  # write figures
-  png(filename = 'jost_D_tree.png', width = 850, height = 640)
-  plot(pw.D.tree)
-  dev.off()
-  
-  png(filename = 'hedrick_G_tree.png', width = 850, height = 640)
-  plot(pw.G.tree)
-  dev.off()
-  
-  png(filename = 'nei_G_tree.png', width = 850, height = 640)
-  plot(pw.GN.tree)
-  dev.off()
-  
+  if (length(as.vector(pw.D)) > 1){
+    pw.D.tree <- nj(pw.D)
+    write.tree(pw.D.tree, 'jost_D_tree.nwk')
+    
+    pw.G.tree <- nj(pw.G)
+    write.tree(pw.G.tree, 'hedrick_G_tree.nwk')
+    
+    pw.GN.tree <- nj(pw.GN)
+    write.tree(pw.GN.tree, 'nei_G_tree.nwk')
+    
+    # write figures
+    png(filename = 'jost_D_tree.png', width = 850, height = 640)
+    plot(pw.D.tree)
+    dev.off()
+    
+    png(filename = 'hedrick_G_tree.png', width = 850, height = 640)
+    plot(pw.G.tree)
+    dev.off()
+    
+    png(filename = 'nei_G_tree.png', width = 850, height = 640)
+    plot(pw.GN.tree)
+    dev.off()
+  } else {
+    print('No trees were built: cannot build an unrooted tree with less than 3 observations')
+  }
 }
