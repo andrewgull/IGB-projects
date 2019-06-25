@@ -1,4 +1,4 @@
-get_pop_diff <- function(filename){
+get_pop_diff <- function(filename, print_tree = FALSE){
   # filename - genalex format file name
   # a function to calculate pairwise Gst (by Hedrick) and D (Jost)
   # and make an unrooted NJ tree
@@ -38,17 +38,20 @@ get_pop_diff <- function(filename){
     write.tree(pw.GN.tree, 'nei_G_tree.nwk')
     
     # write figures
-    png(filename = 'jost_D_tree.png', width = 850, height = 640)
-    plot(pw.D.tree)
-    dev.off()
+    if (print_tree){
+      png(filename = 'jost_D_tree.png', width = 850, height = 640)
+      plot(pw.D.tree)
+      dev.off()
+      
+      png(filename = 'hedrick_G_tree.png', width = 850, height = 640)
+      plot(pw.G.tree)
+      dev.off()
+      
+      png(filename = 'nei_G_tree.png', width = 850, height = 640)
+      plot(pw.GN.tree)
+      dev.off()
+    }
     
-    png(filename = 'hedrick_G_tree.png', width = 850, height = 640)
-    plot(pw.G.tree)
-    dev.off()
-    
-    png(filename = 'nei_G_tree.png', width = 850, height = 640)
-    plot(pw.GN.tree)
-    dev.off()
   } else {
     print('No trees were built: cannot build an unrooted tree with less than 3 observations')
   }
